@@ -4,6 +4,7 @@ import Layout from './components/layout/Layout';
 import AllQuotes from './pages/AllQuotes';
 import SingleQuote from './pages/SingleQuote';
 import NewQuote from './pages/NewQuote';
+import NotFound from './pages/NotFound';
 
 import classes from './components/layout/Layout.module.css';
 
@@ -23,6 +24,9 @@ function App() {
                     </Route>
                     <Route path="/new-quote">
                         <NewQuote />
+                    </Route>
+                    <Route path="*">
+                        <NotFound />
                     </Route>
                 </Switch>
             </main>
