@@ -1,7 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import QuoteForm from '../components/quotes/QuoteForm';
-import LoadingSpinner from '../components/UI/LoadingSpinner';
 import useHttp from '../hooks/use-http';
 import { addQuote } from './../lib/api';
 
@@ -10,16 +9,19 @@ const NewQuote = () => {
 
     const { status, data, error, sendRequest } = useHttp(addQuote);
 
-    const addQuoteHandler = async quoteData => {
-        await sendRequest(quoteData);
-        history.push('/quotes');
+    useEffect(() => {
+        if (status === 'completed') history.push('/quotes');
+    }, [status, history]);
+
+    const addQuoteHandler = quoteData => {
+        sendRequest(quoteData);
     };
 
     return (
-        <>
-            {status === 'pending' && <LoadingSpinner />}
-            {status !== 'pending' && <QuoteForm onAddQuote={addQuoteHandler} />}
-        </>
+        <QuoteForm
+            isLoading={status === 'pending'}
+            onAddQuote={addQuoteHandler}
+        />
     );
 };
 

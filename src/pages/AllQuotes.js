@@ -6,21 +6,30 @@ import useHttp from './../hooks/use-http';
 import { getAllQuotes } from './../lib/api';
 
 const Quotes = () => {
-    const { status, data: quotes, error, sendRequest } = useHttp(getAllQuotes);
+    const {
+        status,
+        data: quotes,
+        error,
+        sendRequest
+    } = useHttp(getAllQuotes, true);
 
     useEffect(() => {
         sendRequest();
     }, [sendRequest]);
 
-    return (
-        <>
-            {status === 'pending' && <LoadingSpinner />}
-            {status === 'completed' && quotes.length > 0 && (
-                <QuoteList quotes={quotes} />
-            )}
-            {status === 'completed' && quotes.length < 1 && <NoQuotesFound />}
-        </>
-    );
+    if (status === 'pending')
+        return (
+            <div className="centered">
+                <LoadingSpinner />
+            </div>
+        );
+
+    if (error) return <div className="centered focused">{error}</div>;
+
+    if (status === 'completed' && (!quotes || quotes.length === 0))
+        return <NoQuotesFound />;
+
+    return <QuoteList quotes={quotes} />;
 };
 
 export default Quotes;

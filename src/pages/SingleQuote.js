@@ -9,13 +9,27 @@ import { getSingleQuote } from './../lib/api';
 const SingleQuote = () => {
     // const params = useParams();
     const route = useRouteMatch();
-    const { status, data: quote, error, sendRequest } = useHttp(getSingleQuote);
+    const { quoteId } = route.params;
+    const {
+        status,
+        data: quote,
+        error,
+        sendRequest
+    } = useHttp(getSingleQuote, true);
 
     useEffect(() => {
-        sendRequest(route.params.quoteId);
-    }, []);
+        sendRequest(quoteId);
+    }, [sendRequest, quoteId]);
 
-    if (!quote) return <h1>No quote found 💩</h1>;
+    if (status === 'pending')
+        return (
+            <div className="centered">
+                <LoadingSpinner />
+            </div>
+        );
+    if (error) return <div className="centered">{error}</div>;
+
+    if (status === 'completed' && !quote) return <h1>No quote found 💩</h1>;
 
     return (
         <>
@@ -29,7 +43,7 @@ const SingleQuote = () => {
                 </div>
             </Route>
             <Route path={`${route.url}/comments`}>
-                <Comments quoteId={route.params.quoteId} />
+                <Comments quoteId={quoteId} />
             </Route>
         </>
     );

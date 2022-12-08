@@ -1,31 +1,44 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import useHttp from '../../hooks/use-http';
 import { getAllComments } from '../../lib/api';
 import LoadingSpinner from '../UI/LoadingSpinner';
+import CommentsList from './CommentsList';
 
 import classes from './Comments.module.css';
 import NewCommentForm from './NewCommentForm';
 
 const Comments = props => {
     const [isAddingComment, setIsAddingComment] = useState(false);
+    const { status, data, error, sendRequest } = useHttp(getAllComments);
+    const { quoteId } = props;
 
     const startAddCommentHandler = () => {
         setIsAddingComment(true);
     };
 
-    const endAddCommentHandler = () => {
+    const endAddCommentHandler = useCallback(() => {
         setIsAddingComment(false);
-    };
+        sendRequest(quoteId);
+    }, [setIsAddingComment, sendRequest, quoteId]);
 
-    const { status, data, error, sendRequest } = useHttp(getAllComments);
+    let comments;
 
-    let comments = data
-        ? data.map(comment => <p key={comment.id}>{comment.text}</p>)
-        : '';
+    if (status === 'pending')
+        comments = (
+            <div className="centered">
+                <LoadingSpinner />
+            </div>
+        );
+
+    if (status === 'completed' && (!data || data.length < 1))
+        comments = <p className="centered">No comments were added yet.</p>;
+
+    if (status === 'completed' && (data || data.length > 0))
+        comments = <CommentsList comments={data} />;
 
     useEffect(() => {
-        sendRequest(props.quoteId);
-    }, [isAddingComment, sendRequest, props.quoteId]);
+        sendRequest(quoteId);
+    }, [sendRequest, quoteId]);
 
     return (
         <section className={classes.comments}>
@@ -37,12 +50,11 @@ const Comments = props => {
             )}
             {isAddingComment && (
                 <NewCommentForm
-                    quoteId={props.quoteId}
+                    quoteId={quoteId}
                     onAdd={endAddCommentHandler}
                 />
             )}
-            {status === 'pending' && <LoadingSpinner />}
-            {comments || error}
+            {comments}
         </section>
     );
 };
