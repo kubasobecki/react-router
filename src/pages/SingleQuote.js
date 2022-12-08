@@ -1,20 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useParams, Route, Link, useRouteMatch } from 'react-router-dom';
 import HighlightedQuote from '../components/quotes/HighlightedQuote';
 import Comments from '../components/comments/Comments';
-
-const DUMMY_QUOTES = [
-    { id: 'q1', author: 'Kuba', text: 'Learning React  is fun!' },
-    { id: 'q2', author: 'Max', text: 'Learning JS  is great!' },
-    { id: 'q3', author: 'Chris', text: 'Learning Redux  is awesome!' },
-    { id: 'q4', author: 'Kate', text: 'Learning TypeScript  is amazing!' }
-];
+import LoadingSpinner from '../components/UI/LoadingSpinner';
+import useHttp from './../hooks/use-http';
+import { getSingleQuote } from './../lib/api';
 
 const SingleQuote = () => {
-    const params = useParams();
-    const quote = DUMMY_QUOTES.find(quote => quote.id === params.quoteId);
+    // const params = useParams();
     const route = useRouteMatch();
-    console.log(route);
+    const { status, data: quote, error, sendRequest } = useHttp(getSingleQuote);
+
+    useEffect(() => {
+        sendRequest(route.params.quoteId);
+    }, []);
 
     if (!quote) return <h1>No quote found 💩</h1>;
 
@@ -30,7 +29,7 @@ const SingleQuote = () => {
                 </div>
             </Route>
             <Route path={`${route.url}/comments`}>
-                <Comments />
+                <Comments quoteId={route.params.quoteId} />
             </Route>
         </>
     );
