@@ -36,7 +36,7 @@ const DUMMY_EVENTS = [
 const EventsPage = () => {
     return (
         <>
-            <h1 className="page-title">EventsPage</h1>
+            {/* <h1 className="page-title">EventsPage</h1> */}
             <EventsList events={DUMMY_EVENTS} />
         </>
     );

@@ -37,7 +37,7 @@ const router = createBrowserRouter([
         element: <RootLayout />,
         children: [
             {
-                path: '',
+                index: true,
                 element: <HomePage />
             },
             {
@@ -45,7 +45,7 @@ const router = createBrowserRouter([
                 element: <EventsLayout />,
                 children: [
                     {
-                        path: '',
+                        index: true,
                         element: <EventsPage />
                     },
                     {
