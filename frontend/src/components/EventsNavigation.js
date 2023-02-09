@@ -8,7 +8,9 @@ function EventsNavigation() {
             <nav>
                 <ul className={classes.list}>
                     <li>
-                        <NavLink to="/events">All Events</NavLink>
+                        <NavLink to="/events" end>
+                            All Events
+                        </NavLink>
                     </li>
                     <li>
                         <NavLink to="/events/new">New Event</NavLink>
