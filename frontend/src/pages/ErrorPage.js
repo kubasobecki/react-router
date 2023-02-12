@@ -1,16 +1,16 @@
 import React from 'react';
 import { useRouteError } from 'react-router-dom';
+import MainNavigation from '../components/MainNavigation';
 import PageContent from '../components/PageContent';
 
 const ErrorPage = () => {
     const error = useRouteError();
-    console.log(error);
 
     let title = 'An error occurred';
     let message = 'Something went very very wrong 💩';
 
     if (error.status === 500) {
-        message = JSON.parse(error.data).message;
+        message = error.data.message;
     }
 
     if (error.status === 404) {
@@ -19,9 +19,12 @@ const ErrorPage = () => {
     }
 
     return (
-        <PageContent title="An error occured">
-            <p>{message}</p>
-        </PageContent>
+        <>
+            <MainNavigation />
+            <PageContent title={title}>
+                <p>{message}</p>
+            </PageContent>
+        </>
     );
 };
 
