@@ -30,8 +30,5 @@ export async function newEventAction({ request, params }) {
         throw json({ message: 'Could not save event 💩' }, { status: 500 });
     }
 
-    const data1 = await response.json();
-    console.log(data1);
-
     return redirect('/events');
 }

@@ -1,6 +1,11 @@
 import React from 'react';
 
-import { useParams, json, useRouteLoaderData } from 'react-router-dom';
+import {
+    useParams,
+    json,
+    useRouteLoaderData,
+    redirect
+} from 'react-router-dom';
 import EventItem from '../components/EventItem';
 
 const EventDetailPage = () => {
@@ -29,6 +34,23 @@ export async function eventDetailLoader({ request, params }) {
         );
     } else {
         return response;
+    }
+}
+
+export async function deleteEventAction({ request, params }) {
+    const { id } = params;
+
+    const response = await fetch(`http://localhost:8080/events/${id}`, {
+        method: request.method
+    });
+
+    if (!response.ok) {
+        throw json(
+            { message: 'Could not delete the event 💩' },
+            { status: 500 }
+        );
+    } else {
+        return redirect('/events');
     }
 }
 
