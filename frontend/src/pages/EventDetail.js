@@ -2,8 +2,8 @@ import React from 'react';
 
 import {
     useParams,
-    json,
     useRouteLoaderData,
+    json,
     redirect
 } from 'react-router-dom';
 import EventItem from '../components/EventItem';
