@@ -28,8 +28,7 @@ export async function eventDetailLoader({ request, params }) {
             { status: 500 }
         );
     } else {
-        const resData = await response.json();
-        return resData;
+        return response;
     }
 }
 
