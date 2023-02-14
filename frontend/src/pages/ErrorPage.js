@@ -11,6 +11,7 @@ const ErrorPage = () => {
 
     if (error.status === 500) {
         message = error.data.message;
+        console.log(message);
     }
 
     if (error.status === 404) {
